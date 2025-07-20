@@ -32,7 +32,7 @@ class UserService {
 	@Retryable({
 		maxAttempts: 3,
 	})
-	public getFirstName(): string {
+	public async getFirstName(): Promise<string> {
 		console.log('Fetching first name...');
 		return 'Eric';
 	}
@@ -40,7 +40,7 @@ class UserService {
 	@Retryable({
 		maxAttempts: 3,
 	})
-	public getLastName(): string {
+	public async getLastName(): Promise<string> {
 		console.log('Fetching last name...');
 		return 'Zorn';
 	}
@@ -66,18 +66,18 @@ class UserResolver {
 	}
 
 	@FieldResolver(() => String, { description: 'First name of the user' })
-	public firstName(): string {
+	public firstName(): Promise<string> {
 		return this.userService.getFirstName();
 	}
 
 	@FieldResolver(() => String, { description: 'Last name of the user' })
-	public lastName(): string {
+	public lastName(): Promise<string> {
 		return this.userService.getLastName();
 	}
 
 	@FieldResolver(() => String, { description: 'Full name of the user' })
-	public fullName(): string {
-		return `${this.userService.getFirstName()} ${this.userService.getLastName()}`;
+	public async fullName(): Promise<string> {
+		return `${await this.userService.getFirstName()} ${await this.userService.getLastName()}`;
 	}
 }
 
