@@ -1,6 +1,7 @@
 import { ObjectType, Field, Resolver, Query, ID, buildSchema, Int, Ctx, FieldResolver } from 'type-graphql';
 import Context from './context';
 import Container, { Service } from 'typedi';
+import { Retryable } from 'typescript-retry-decorator';
 
 @ObjectType({ description: 'User model' })
 class User {
@@ -28,11 +29,17 @@ class Address {
 
 @Service()
 class UserService {
+	@Retryable({
+		maxAttempts: 3,
+	})
 	public getFirstName(): string {
 		console.log('Fetching first name...');
 		return 'Eric';
 	}
 
+	@Retryable({
+		maxAttempts: 3,
+	})
 	public getLastName(): string {
 		console.log('Fetching last name...');
 		return 'Zorn';
