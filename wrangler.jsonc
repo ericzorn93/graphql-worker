@@ -21,6 +21,9 @@
 		"logs": {
 			"enabled": true
 		}
+	},
+	"vars": {
+		"MY_VARIABLE": "random_value"
 	}
 	/**
 	 * Smart Placement

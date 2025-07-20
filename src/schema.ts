@@ -1,7 +1,9 @@
 import { ObjectType, Field, Resolver, Query, ID, buildSchema, Int, Ctx, FieldResolver } from 'type-graphql';
-import Context from './context';
-import Container, { Service } from 'typedi';
+import Container, { Inject, Service } from 'typedi';
 import { Retryable } from 'typescript-retry-decorator';
+
+import Context from './context';
+import { EnvToken } from './di_tokens';
 
 @ObjectType({ description: 'User model' })
 class User {
@@ -29,11 +31,14 @@ class Address {
 
 @Service()
 class UserService {
+	@Inject(EnvToken) private readonly env: Env;
+
 	@Retryable({
 		maxAttempts: 3,
 	})
 	public async getFirstName(): Promise<string> {
 		console.log('Fetching first name...');
+		console.log(this.env.MY_VARIABLE);
 		return 'Eric';
 	}
 

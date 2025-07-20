@@ -33,6 +33,9 @@ importers:
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.8.19
         version: 0.8.55(@vitest/runner@3.2.4)(@vitest/snapshot@3.2.4)(vitest@3.2.4(@types/node@24.0.15))
+      '@types/node':
+        specifier: ^24.0.15
+        version: 24.0.15
       typescript:
         specifier: ^5.5.2
         version: 5.8.3

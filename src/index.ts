@@ -1,11 +1,13 @@
 import 'reflect-metadata';
 
+import { Container } from 'typedi';
 import { createYoga } from 'graphql-yoga';
 
 import { schema } from './schema';
 import Context from './context';
+import { EnvToken } from './di_tokens';
 
-const yoga = createYoga({
+const yoga = createYoga<Env, Context>({
 	schema,
 	graphiql: true,
 	graphqlEndpoint: '/graphql',
@@ -13,5 +15,13 @@ const yoga = createYoga({
 });
 
 export default {
-	fetch: yoga.fetch,
+	fetch: async (request: Request, env: Env): Promise<Response> => {
+		try {
+			Container.set(EnvToken, env); // Set the environment in the container for dependency injection
+			return await yoga.fetch(request, env);
+		} catch (error) {
+			console.error('Error in fetch handler:', error);
+			return new Response('Internal Server Error', { status: 500 });
+		}
+	},
 } satisfies ExportedHandler<Env>;
