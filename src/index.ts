@@ -11,8 +11,13 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
+import 'reflect-metadata';
+import { createYoga } from 'graphql-yoga';
+
+import { schema } from './schema';
+
+const yoga = createYoga({ schema, graphiql: true, graphqlEndpoint: '/graphql' });
+
 export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		return new Response('Hello World!');
-	},
+	fetch: yoga.fetch,
 } satisfies ExportedHandler<Env>;

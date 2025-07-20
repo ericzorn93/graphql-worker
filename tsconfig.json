@@ -30,15 +30,16 @@
 		"allowSyntheticDefaultImports": true,
 		/* Ensure that casing is correct in imports. */
 		"forceConsistentCasingInFileNames": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"strictPropertyInitialization": false,
 
 		/* Enable all strict type-checking options. */
 		"strict": true,
 
 		/* Skip type checking all .d.ts files. */
 		"skipLibCheck": true,
-		"types": [
-			"./worker-configuration.d.ts"
-		]
+		"types": ["./worker-configuration.d.ts"]
 	},
 	"exclude": ["test"],
 	"include": ["worker-configuration.d.ts", "src/**/*.ts"]

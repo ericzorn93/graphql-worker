@@ -7,6 +7,7 @@
 	"name": "graphql-worker",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-07-19",
+	"compatibility_flags": ["nodejs_compat"],
 	"observability": {
 		"enabled": true
 	}
