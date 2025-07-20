@@ -30,14 +30,24 @@ class Address {
 }
 
 @Service()
+class UserService {
+	public getName(): string {
+		console.log('Fetching user name...');
+		return 'Eric Zorn';
+	}
+}
+
+@Service()
 @Resolver(User)
 class UserResolver {
+	constructor(private readonly userService: UserService) {}
+
 	@Query(() => User)
 	me(@Ctx() ctx: Context): User {
 		console.log({ name: ctx.appName, ipAddress: ctx.ipAddress }); // Log the IP address for debugging
 		return {
 			id: '1',
-			name: 'John Doe',
+			name: this.userService.getName(),
 			address: {
 				street: '123 Main St',
 				city: 'Anytown',

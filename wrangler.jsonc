@@ -5,9 +5,14 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "graphql-worker",
-	"main": "src/index.ts",
+	"main": "dist/index.js",
 	"compatibility_date": "2025-07-19",
 	"compatibility_flags": ["nodejs_compat"],
+	"build": {
+		"command": "yarn run build",
+		"cwd": "./",
+		"watch_dir": "./src"
+	},
 	"observability": {
 		"enabled": true,
 		"logs": {
