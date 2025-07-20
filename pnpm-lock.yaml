@@ -23,6 +23,9 @@ importers:
       type-graphql:
         specifier: 2.0.0-rc.2
         version: 2.0.0-rc.2(class-validator@0.14.2)(graphql-scalars@1.24.2(graphql@16.11.0))(graphql@16.11.0)
+      typedi:
+        specifier: ^0.10.0
+        version: 0.10.0
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.8.19
@@ -1087,6 +1090,9 @@ packages:
       class-validator:
         optional: true
 
+  typedi@0.10.0:
+    resolution: {integrity: sha512-v3UJF8xm68BBj6AF4oQML3ikrfK2c9EmZUyLOfShpJuItAqVBHWP/KtpGinkSsIiP6EZyyb6Z3NXyW9dgS9X1w==}
+
   typescript@5.8.3:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
     engines: {node: '>=14.17'}
@@ -2138,6 +2144,8 @@ snapshots:
       tslib: 2.8.1
     optionalDependencies:
       class-validator: 0.14.2
+
+  typedi@0.10.0: {}
 
   typescript@5.8.3: {}
 
