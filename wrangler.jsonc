@@ -13,6 +13,9 @@
 		"cwd": "./",
 		"watch_dir": "./src"
 	},
+	"placement": {
+		"mode": "smart"
+	},
 	"observability": {
 		"enabled": true,
 		"logs": {
