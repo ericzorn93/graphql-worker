@@ -1,11 +1,12 @@
-import { ObjectType, Field, Resolver, Query, ID, buildSchema, Int } from 'type-graphql';
+import { ObjectType, Field, Resolver, Query, ID, buildSchema, Int, Ctx } from 'type-graphql';
+import Context from './context';
 
-@ObjectType()
+@ObjectType({ description: 'User model' })
 class User {
 	@Field(() => ID)
 	id!: string;
 
-	@Field(() => String)
+	@Field(() => String, { description: 'Name of the user' })
 	name: string;
 
 	@Field(() => Address, { nullable: true })
@@ -30,7 +31,8 @@ class Address {
 @Resolver(User)
 class UserResolver {
 	@Query(() => User)
-	me(): User {
+	me(@Ctx() ctx: Context): User {
+		console.log(ctx.ipAddress); // Log the IP address for debugging
 		return {
 			id: '1',
 			name: 'John Doe',
@@ -44,4 +46,4 @@ class UserResolver {
 	}
 }
 
-export const schema = await buildSchema({ emitSchemaFile: false, resolvers: [UserResolver] });
+export const schema = await buildSchema({ emitSchemaFile: false, resolvers: [UserResolver], validate: true });

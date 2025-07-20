@@ -9,7 +9,10 @@
 	"compatibility_date": "2025-07-19",
 	"compatibility_flags": ["nodejs_compat"],
 	"observability": {
-		"enabled": true
+		"enabled": true,
+		"logs": {
+			"enabled": true
+		}
 	}
 	/**
 	 * Smart Placement
