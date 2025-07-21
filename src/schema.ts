@@ -14,7 +14,7 @@ class User {
 	address?: Address;
 }
 
-@ObjectType()
+@ObjectType({ description: 'Address model' })
 class Address {
 	@Field(() => String)
 	street: string;
