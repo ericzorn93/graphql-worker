@@ -31,15 +31,17 @@ class Address {
 
 @Service()
 class UserService {
-	@Inject(EnvToken) private readonly env: Env;
+	constructor(@Inject(EnvToken) private readonly env: Env) {}
 
 	@Retryable({
 		maxAttempts: 3,
 	})
 	public async getFirstName(): Promise<string> {
+		const firstName = 'Eric';
 		console.log('Fetching first name...');
+		await this.env.GRAPHQL_WORKER.put('firstName', firstName);
 		console.log(this.env.MY_VARIABLE);
-		return 'Eric';
+		return firstName;
 	}
 
 	@Retryable({
