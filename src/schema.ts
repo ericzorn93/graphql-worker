@@ -59,7 +59,7 @@ class UserResolver {
 	constructor(private readonly userService: UserService) {}
 
 	@Query(() => User)
-	me(@Ctx() ctx: Context): User {
+	viewer(@Ctx() ctx: Context): User {
 		console.log({ name: ctx.appName, ipAddress: ctx.ipAddress }); // Log the IP address for debugging
 		return {
 			id: '1',
