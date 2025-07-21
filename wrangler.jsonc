@@ -14,7 +14,7 @@
 		"watch_dir": "./src"
 	},
 	"placement": {
-		"mode": "smart"
+		"mode": "off"
 	},
 	"observability": {
 		"enabled": true,
