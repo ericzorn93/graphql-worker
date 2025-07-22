@@ -6,6 +6,7 @@
 		"deploy": "wrangler deploy",
 		"dev": "wrangler dev",
 		"build": "tsc --project tsconfig.json",
+		"build:tsgo": "tsgo --project tsconfig.json",
 		"start": "wrangler dev",
 		"test": "vitest",
 		"cf-typegen": "wrangler types"
@@ -13,6 +14,7 @@
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "^0.8.19",
 		"@types/node": "^24.0.15",
+		"@typescript/native-preview": "7.0.0-dev.20250722.1",
 		"typescript": "^5.5.2",
 		"vitest": "~3.2.0",
 		"wrangler": "^4.25.0"
