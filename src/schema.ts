@@ -39,7 +39,6 @@ class UserService {
 	public async getFirstName(): Promise<string> {
 		const firstName = 'Eric';
 		console.log('Fetching first name...');
-		await this.env.GRAPHQL_WORKER_KV.put('firstName', firstName);
 		console.log(this.env.MY_VARIABLE);
 		return firstName;
 	}
@@ -56,11 +55,14 @@ class UserService {
 @Service()
 @Resolver(User)
 class UserResolver {
-	constructor(private readonly userService: UserService) {}
+	constructor(@Inject(EnvToken) private readonly env: Env, private readonly userService: UserService) {}
 
 	@Query(() => User, { description: 'Get the current viewer/user of the app' })
-	viewer(@Ctx() ctx: Context): User {
+	async viewer(@Ctx() ctx: Context): Promise<User> {
 		console.log({ name: ctx.appName, ipAddress: ctx.ipAddress }); // Log the IP address for debugging
+
+		await this.env.GRAPHQL_WORKER_KV.put('lastViewedAt', new Date().toISOString());
+
 		return {
 			id: '1',
 			address: {
