@@ -16,16 +16,16 @@ class User {
 
 @ObjectType({ description: 'Address model' })
 class Address {
-	@Field(() => String)
+	@Field(() => String, { description: 'Street address' })
 	street: string;
 
-	@Field(() => String)
+	@Field(() => String, { description: 'City of the address' })
 	city: string;
 
-	@Field(() => String)
+	@Field(() => String, { description: 'State of the address' })
 	state: string;
 
-	@Field(() => Int)
+	@Field(() => Int, { description: 'ZIP code of the address' })
 	zip: number;
 }
 
@@ -39,7 +39,7 @@ class UserService {
 	public async getFirstName(): Promise<string> {
 		const firstName = 'Eric';
 		console.log('Fetching first name...');
-		await this.env.GRAPHQL_WORKER.put('firstName', firstName);
+		await this.env.GRAPHQL_WORKER_KV.put('firstName', firstName);
 		console.log(this.env.MY_VARIABLE);
 		return firstName;
 	}
@@ -58,7 +58,7 @@ class UserService {
 class UserResolver {
 	constructor(private readonly userService: UserService) {}
 
-	@Query(() => User)
+	@Query(() => User, { description: 'Get the current viewer/user of the app' })
 	viewer(@Ctx() ctx: Context): User {
 		console.log({ name: ctx.appName, ipAddress: ctx.ipAddress }); // Log the IP address for debugging
 		return {

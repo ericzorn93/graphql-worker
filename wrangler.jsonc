@@ -27,8 +27,8 @@
 	},
 	"kv_namespaces": [
 		{
-			"binding": "GRAPHQL_WORKER",
-			"id": "24cd0f436ad44bb5970552adf02e1889"
+			"binding": "GRAPHQL_WORKER_KV",
+			"id": "6b6d9e6b2b6243b4a839a76f8e43f8cf"
 		}
 	]
 	/**
