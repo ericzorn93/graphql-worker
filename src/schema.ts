@@ -1,9 +1,10 @@
-import { ObjectType, Field, Resolver, Query, ID, buildSchema, Int, Ctx, FieldResolver } from 'type-graphql';
+import { ObjectType, Field, Resolver, Query, ID, buildSchema, Int, Ctx, FieldResolver, UseMiddleware } from 'type-graphql';
 import Container, { Inject, Service } from 'typedi';
 import { Retryable } from 'typescript-retry-decorator';
 
 import Context from './context';
 import { EnvToken } from './di_tokens';
+import { WriteLastAcesses } from './middleware';
 
 @ObjectType({ description: 'User model' })
 class User {
@@ -54,14 +55,13 @@ class UserService {
 
 @Service()
 @Resolver(User)
+@UseMiddleware(WriteLastAcesses)
 class UserResolver {
-	constructor(@Inject(EnvToken) private readonly env: Env, private readonly userService: UserService) {}
+	constructor(private readonly userService: UserService) {}
 
 	@Query(() => User, { description: 'Get the current viewer/user of the app' })
 	async viewer(@Ctx() ctx: Context): Promise<User> {
 		console.log({ name: ctx.appName, ipAddress: ctx.ipAddress }); // Log the IP address for debugging
-
-		await this.env.GRAPHQL_WORKER_KV.put('lastViewedAt', new Date().toISOString());
 
 		return {
 			id: '1',
