@@ -10,8 +10,14 @@ export class WriteLastAcesses implements MiddlewareInterface<Context> {
 
 	async use(_resolverData: ResolverData<Context>, next: NextFn) {
 		const now = new Date();
-		await this.env.GRAPHQL_WORKER_KV.put('lastAccessedAt', now.toISOString());
-		console.info(`Last accessed at: ${now.toISOString()}`);
+		try {
+			await this.env.GRAPHQL_WORKER_KV.put('lastAccessedAt', now.toISOString());
+		} catch (error) {
+			console.error('Error writing to KV:', error);
+		} finally {
+			console.info(`Last accessed at: ${now.toISOString()}`);
+		}
+
 		return next();
 	}
 }
