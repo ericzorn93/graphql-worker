@@ -57,12 +57,11 @@ class UserService {
 @Service()
 @Resolver(User)
 class UserResolver {
-	constructor(private readonly userService: UserService, @Inject(EnvToken) private readonly env: Env) {}
+	constructor(private readonly userService: UserService) {}
 
 	@Query(() => User, { description: 'Get the current viewer/user of the app' })
 	public async viewer(@Ctx() ctx: Context): Promise<User> {
-		const lastWrittenAt = await this.env.GRAPHQL_WORKER_KV.get(LAST_WRITTEN_TIMESTAMP_KEY);
-		console.info({ name: ctx.appName, ipAddress: ctx.ipAddress, lastWrittenAt });
+		console.info({ name: ctx.appName, ipAddress: ctx.ipAddress });
 
 		return {
 			id: '1',
@@ -91,10 +90,35 @@ class UserResolver {
 	}
 }
 
+@ObjectType({ description: 'Metrics for the application' })
+class Metrics {
+	@Field(() => Date, { description: 'Last written timestamp in KV' })
+	public lastWrittenAt: Date;
+}
+
 @Service()
-@Resolver()
+@Resolver(Metrics)
 @UseMiddleware(WriteLastAcesses)
 export class MetricsResolver {
+	constructor(@Inject(EnvToken) private readonly env: Env) {}
+
+	@Query(() => Metrics, { description: 'Get application metrics' })
+	public async metrics(): Promise<Metrics> {
+		const lastWrittenAt = await this.env.GRAPHQL_WORKER_KV.get<string>(LAST_WRITTEN_TIMESTAMP_KEY);
+		if (!lastWrittenAt) {
+			throw new Error('Last written timestamp not found in KV');
+		}
+
+		return {
+			lastWrittenAt: new Date(lastWrittenAt),
+		};
+	}
+
+	@FieldResolver(() => Date, { description: 'Get the current timestamp from the server' })
+	public currentTime(): Date {
+		return new Date();
+	}
+
 	@Mutation(() => Boolean, { description: 'Write the last written time to KV' })
 	public async setLastWrittenTimestamp(): Promise<boolean> {
 		console.info('Setting last written time to KV...');
