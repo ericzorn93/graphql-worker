@@ -120,7 +120,15 @@ export class MetricsResolver {
 
 	@Mutation(() => Boolean, { description: 'Write the last written time to KV' })
 	public async setLastWrittenTimestamp(): Promise<boolean> {
-		console.info('Setting last written time to KV...');
+		try {
+			console.info('Setting last written time to KV...');
+			const now = new Date();
+			await this.env.GRAPHQL_WORKER_KV.put(LAST_WRITTEN_TIMESTAMP_KEY, now.toISOString());
+		} catch (error) {
+			console.error('Error writing to KV:', error);
+			throw new Error('Failed to write last written timestamp to KV');
+		}
+
 		return true;
 	}
 }
