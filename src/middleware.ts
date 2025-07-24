@@ -16,7 +16,7 @@ export class WriteLastAcesses implements MiddlewareInterface<Context> {
 		} catch (error) {
 			console.error('Error writing to KV:', error);
 		} finally {
-			console.info(`Last accessed at: ${now.toISOString()}`);
+			console.info(`last written at: ${now.toISOString()}`);
 		}
 
 		return next();
