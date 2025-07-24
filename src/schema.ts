@@ -96,7 +96,7 @@ class UserResolver {
 @UseMiddleware(WriteLastAcesses)
 export class MetricsResolver {
 	@Mutation(() => Boolean, { description: 'Write the last written time to KV' })
-	public async setLastWrittenTime(): Promise<boolean> {
+	public async setLastWrittenTimestamp(): Promise<boolean> {
 		console.info('Setting last written time to KV...');
 		return true;
 	}
