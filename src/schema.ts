@@ -5,6 +5,7 @@ import { Retryable } from 'typescript-retry-decorator';
 import Context from './context';
 import { EnvToken } from './di_tokens';
 import { WriteLastAcesses } from './middleware';
+import { LAST_WRITTEN_TIMESTAMP_KEY } from './constants';
 
 @ObjectType({ description: 'User model' })
 class User {
@@ -60,7 +61,7 @@ class UserResolver {
 
 	@Query(() => User, { description: 'Get the current viewer/user of the app' })
 	public async viewer(@Ctx() ctx: Context): Promise<User> {
-		const lastWrittenAt = await this.env.GRAPHQL_WORKER_KV.get('lastAccessedAt');
+		const lastWrittenAt = await this.env.GRAPHQL_WORKER_KV.get(LAST_WRITTEN_TIMESTAMP_KEY);
 		console.info({ name: ctx.appName, ipAddress: ctx.ipAddress, lastWrittenAt });
 
 		return {
