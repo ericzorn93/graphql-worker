@@ -95,10 +95,15 @@ class UserResolver {
 @UseMiddleware(WriteLastAcesses)
 export class MetricsResolver {
 	@Mutation(() => Boolean, { description: 'Write the last accessed time to KV' })
-	public async writeLastAccessedTime(): Promise<boolean> {
-		console.info('Writing last accessed time to KV...');
+	public async setLastAccessedTime(): Promise<boolean> {
+		console.info('Setting last accessed time to KV...');
 		return true;
 	}
 }
 
-export const schema = await buildSchema({ emitSchemaFile: false, resolvers: [UserResolver], validate: true, container: Container });
+export const schema = await buildSchema({
+	emitSchemaFile: false,
+	resolvers: [UserResolver, MetricsResolver],
+	validate: true,
+	container: Container,
+});
