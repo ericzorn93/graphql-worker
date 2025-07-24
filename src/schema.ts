@@ -98,7 +98,6 @@ class Metrics {
 
 @Service()
 @Resolver(Metrics)
-@UseMiddleware(WriteLastAcesses)
 export class MetricsResolver {
 	constructor(@Inject(EnvToken) private readonly env: Env) {}
 
