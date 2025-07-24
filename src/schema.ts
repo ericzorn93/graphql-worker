@@ -1,4 +1,4 @@
-import { ObjectType, Field, Resolver, Query, ID, buildSchema, Int, Ctx, FieldResolver, UseMiddleware } from 'type-graphql';
+import { ObjectType, Field, Resolver, Query, ID, buildSchema, Int, Ctx, FieldResolver, UseMiddleware, Mutation } from 'type-graphql';
 import Container, { Inject, Service } from 'typedi';
 import { Retryable } from 'typescript-retry-decorator';
 
@@ -55,13 +55,13 @@ class UserService {
 
 @Service()
 @Resolver(User)
-@UseMiddleware(WriteLastAcesses)
 class UserResolver {
-	constructor(private readonly userService: UserService) {}
+	constructor(private readonly userService: UserService, @Inject(EnvToken) private readonly env: Env) {}
 
 	@Query(() => User, { description: 'Get the current viewer/user of the app' })
-	async viewer(@Ctx() ctx: Context): Promise<User> {
-		console.log({ name: ctx.appName, ipAddress: ctx.ipAddress }); // Log the IP address for debugging
+	public async viewer(@Ctx() ctx: Context): Promise<User> {
+		const lastWrittenAt = await this.env.GRAPHQL_WORKER_KV.get('lastAccessedAt');
+		console.info({ name: ctx.appName, ipAddress: ctx.ipAddress, lastWrittenAt });
 
 		return {
 			id: '1',
@@ -87,6 +87,17 @@ class UserResolver {
 	@FieldResolver(() => String, { description: 'Full name of the user' })
 	public async fullName(): Promise<string> {
 		return `${await this.userService.getFirstName()} ${await this.userService.getLastName()}`;
+	}
+}
+
+@Service()
+@Resolver()
+@UseMiddleware(WriteLastAcesses)
+export class MetricsResolver {
+	@Mutation(() => Boolean, { description: 'Write the last accessed time to KV' })
+	public async writeLastAccessedTime(): Promise<boolean> {
+		console.info('Writing last accessed time to KV...');
+		return true;
 	}
 }
 

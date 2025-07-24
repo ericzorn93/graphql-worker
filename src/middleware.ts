@@ -8,7 +8,7 @@ import { EnvToken } from './di_tokens';
 export class WriteLastAcesses implements MiddlewareInterface<Context> {
 	constructor(@Inject(EnvToken) private readonly env: Env) {}
 
-	async use(_resolverData: ResolverData<Context>, next: NextFn) {
+	public async use(_resolverData: ResolverData<Context>, next: NextFn) {
 		const now = new Date();
 		try {
 			await this.env.GRAPHQL_WORKER_KV.put('lastAccessedAt', now.toISOString());
