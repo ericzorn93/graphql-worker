@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import { Container } from 'typedi';
 import { createYoga } from 'graphql-yoga';
+import { useResponseCache } from '@graphql-yoga/plugin-response-cache';
 
 import Context from './context';
 import { schema } from './schema';
@@ -12,6 +13,7 @@ const yoga = createYoga<Env, Context>({
 	graphiql: true,
 	graphqlEndpoint: '/graphql',
 	context: async ({ request }): Promise<Context> => new Context(request),
+	plugins: [useResponseCache({ session: () => null })],
 });
 
 export default {
