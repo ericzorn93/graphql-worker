@@ -94,6 +94,9 @@ class UserResolver {
 class Metrics {
 	@Field(() => Date, { description: 'Last written timestamp in KV' })
 	public lastWrittenAt: Date;
+
+	@Field(() => Date, { description: 'Current timestamp from the server' })
+	public currentTime: Date;
 }
 
 @Service()
@@ -110,12 +113,8 @@ export class MetricsResolver {
 
 		return {
 			lastWrittenAt: new Date(lastWrittenAt),
+			currentTime: new Date(),
 		};
-	}
-
-	@FieldResolver(() => Date, { description: 'Get the current timestamp from the server' })
-	public currentTime(): Date {
-		return new Date();
 	}
 
 	@Mutation(() => Boolean, { description: 'Write the last written time to KV' })
