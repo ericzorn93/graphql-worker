@@ -1,18 +1,17 @@
-import { ObjectType, Field, Resolver, Query, ID, buildSchema, Int, Ctx, FieldResolver, UseMiddleware, Mutation } from 'type-graphql';
+import { ObjectType, Field, Resolver, Query, ID, buildSchema, Int, Ctx, FieldResolver, Directive, Mutation } from 'type-graphql';
 import Container, { Inject, Service } from 'typedi';
 import { Retryable } from 'typescript-retry-decorator';
 
 import Context from './context';
 import { EnvToken } from './di_tokens';
-import { WriteLastAcesses } from './middleware';
 import { LAST_WRITTEN_TIMESTAMP_KEY } from './constants';
 
 @ObjectType({ description: 'User model' })
 class User {
-	@Field(() => ID)
+	@Field(() => ID, { description: 'Unique identifier for the user' })
 	id!: string;
 
-	@Field(() => Address, { nullable: true })
+	@Field(() => Address, { nullable: true, description: 'Address of the user' })
 	address?: Address;
 }
 
@@ -95,6 +94,12 @@ class Metrics {
 	@Field(() => Date, { description: 'Last written timestamp in KV' })
 	public lastWrittenAt: Date;
 
+	@Field(() => Date, {
+		description: 'Old time from the server',
+		deprecationReason: 'This field is deprecated, please use currentTime instead',
+	})
+	oldTime: Date;
+
 	@Field(() => Date, { description: 'Current timestamp from the server' })
 	public currentTime: Date;
 }
@@ -106,14 +111,18 @@ export class MetricsResolver {
 
 	@Query(() => Metrics, { description: 'Get application metrics' })
 	public async metrics(): Promise<Metrics> {
+		console.info;
 		const lastWrittenAt = await this.env.GRAPHQL_WORKER_KV.get<string>(LAST_WRITTEN_TIMESTAMP_KEY);
 		if (!lastWrittenAt) {
+			console.error('Last written timestamp not found in KV');
 			throw new Error('Last written timestamp not found in KV');
 		}
 
+		const now = new Date();
 		return {
 			lastWrittenAt: new Date(lastWrittenAt),
-			currentTime: new Date(),
+			oldTime: now,
+			currentTime: now,
 		};
 	}
 
